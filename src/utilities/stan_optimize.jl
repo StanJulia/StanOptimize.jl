@@ -8,7 +8,7 @@ data_file_path(output_base::AbstractString, id::Int) = output_base * "_data_$(id
 """
 $(SIGNATURES)
 
-Sample `n_chains` from `model` using `data_file`. Return the full paths of the sample files
+Optimize `n_chains` from `model` using `data_file`. Return the full paths of the sample files
 and logs as pairs. In case of an error with a chain, the first value is `nothing`.
 
 `output_base` is used to write the data file (using `StanDump.stan_dump`) and to determine
@@ -21,7 +21,7 @@ When `data` is provided as a `NamedTuple`or a `Dict`, it is written using
 When `rm_samples` (default: `true`), remove potential pre-existing sample files after
 compiling the model.
 """
-function stan_sample(model::StanModel, data::T, n_chains::Integer;
+function stan_optimize(model::StanModel, data::T, n_chains::Integer;
                      output_base = default_output_base(model),
                       rm_samples = true,
                      settings = sampler_settings) where {T<:NamedTuple}
@@ -34,7 +34,7 @@ function stan_sample(model::StanModel, data::T, n_chains::Integer;
       settings = sampler_settings)
 end
 
-function stan_sample(model::StanModel,  data::T, n_chains::Integer;
+function stan_optimize(model::StanModel,  data::T, n_chains::Integer;
                      output_base = default_output_base(model),
                      rm_samples = true,
                      settings = sampler_settings) where {T<:Dict}
@@ -47,7 +47,7 @@ function stan_sample(model::StanModel,  data::T, n_chains::Integer;
       settings = sampler_settings)
 end
 
-function stan_sample(model::StanModel,  data::T, n_chains::Integer;
+function stan_optimize(model::StanModel,  data::T, n_chains::Integer;
                      output_base = default_output_base(model),
                      rm_samples = true,
                      settings = sampler_settings) where {T<:Vector}
@@ -58,7 +58,7 @@ function stan_sample(model::StanModel,  data::T, n_chains::Integer;
       settings = sampler_settings)
 end
 
-function _stan_sample(model::StanModel,
+function _stan_optimize(model::StanModel,
                     n_chains::Integer;
                     output_base = default_output_base(model),
                     rm_samples = true,
@@ -66,7 +66,7 @@ function _stan_sample(model::StanModel,
     #println("Using StanSample version of stan_sample.\n")
     exec_path = StanRun.ensure_executable(model)
     rm_samples && rm.(StanRun.find_samples(model))
-    cmds_and_paths = [stan_cmd_and_paths(exec_path, output_base, id, settings)
+    cmds_and_paths = [optimize_cmd_and_paths(exec_path, output_base, id, settings)
                       for id in 1:n_chains]
     pmap(cmds_and_paths) do cmd_and_path
         cmd, (sample_path, log_path) = cmd_and_path

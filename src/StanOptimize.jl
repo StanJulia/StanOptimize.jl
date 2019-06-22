@@ -20,19 +20,18 @@ using Reexport
 @reexport using Parameters
 
 using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
-using CmdStan: update_model_file, convert_a3d
+using CmdStan: update_model_file, convert_a3d, CmdStanModel
 
 import StanRun: stan_cmd_and_paths, default_output_base
+import StanSample: create_R_data_files, read_stanrun_samples
 #import StanRun: stan_sample
 
-include("utilities/create_R_data_files.jl")
-include("utilities/read_stanrun_samples.jl")
-include("utilities/sample_defaults.jl")
-include("utilities/stan_sample.jl")
-include("utilities/stan_cmd_and_paths.jl")
-include("model/CmdStanModel.jl")
+include("utilities/optimize_defaults.jl")
+include("utilities/stan_optimize.jl")
+include("utilities/optimize_cmd_and_paths.jl")
+include("model/CmdStanOptimizeModel.jl")
 
-export  CmdStanModel,
+export  CmdStanOptimizeModel,
   read_stanrun_samples, update_settings,
   update_model_file, convert_a3d, data_file_path,
   default_output_base, create_R_data_files

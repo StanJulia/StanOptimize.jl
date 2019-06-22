@@ -9,6 +9,7 @@
 [![Build Status](https://travis-ci.com/examples/StanOptimize.jl.svg?branch=master)](https://travis-ci.com/StanJulia/StanOptimize.jl)
 [![codecov.io](http://codecov.io/github/StanJulia/StanOptimize.jl/coverage.svg?branch=master)](http://codecov.io/github/StanJulia/StanOptimize.jl?branch=master)
 
+
 ## Important note
 
 ### This is not a package being tested for release. If succesful, it might be used in CmdStan.jl v6 or as a support package underlying CmdStan.jl,
