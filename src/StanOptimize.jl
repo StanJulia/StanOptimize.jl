@@ -33,6 +33,7 @@ include("stanrun/stan_sample.jl")
 include("stansamples/read_optimize.jl")
 
 export
+  CmdStanModels,
   CmdStanOptimizeModel,
   read_optimize
 

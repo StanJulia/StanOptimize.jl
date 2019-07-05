@@ -1,5 +1,7 @@
 import Base: show
 
+abstract type CmdStanModel end
+
 """
 # CmdStanOptimizeModel 
 
@@ -33,7 +35,7 @@ Create a CmdStanOptimizeModel.
 ```
 
 """
-struct CmdStanOptimizeModel
+struct CmdStanOptimizeModel <: CmdStanModel
   name::AbstractString
   model::AbstractString
   n_chains::Vector{Int64}
