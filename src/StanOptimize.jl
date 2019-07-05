@@ -19,6 +19,7 @@ using Reexport
 @reexport using MCMCChains
 @reexport using Parameters
 
+using Random
 using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 
 import StanRun: stan_sample, stan_cmd_and_paths, default_output_base
@@ -32,8 +33,7 @@ include("stanrun/stan_sample.jl")
 include("stansamples/read_optimize.jl")
 
 export
-  CmdStanSampleModel,
-  read_optimize,
-  stan_summary
+  CmdStanOptimizeModel,
+  read_optimize
 
 end # module

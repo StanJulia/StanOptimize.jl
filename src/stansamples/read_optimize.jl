@@ -15,22 +15,21 @@ read_optimize(m::Stanmodel)
 ```
 
 """
-function read_optimize(model::Stanmodel)
+function read_optimize(model::CmdStanOptimizeModel)
   ## Collect the results in a Dict
   
   cnames = String[]
-  res_type = "optimize"
-  tdict = Dict()
+  res_type = "chain"
   
   ## tdict contains the arrays of values ##
   tdict = Dict()
   
-  for i in 1:model.nchains
-      if isfile("$(model.name)_$(res_type)_$(i).csv")
+  for i in 1:get_n_chains(model)
+      if isfile("$(model.output_base)_$(res_type)_$(i).csv")
         
         # A result type file for chain i is present ##
         
-        instream = open("$(model.name)_$(res_type)_$(i).csv")
+        instream = open("$(model.output_base)_$(res_type)_$(i).csv")
         if i == 1
           str = read(instream, String)
           sstr = split(str)
@@ -38,7 +37,7 @@ function read_optimize(model::Stanmodel)
           tdict[:stan_minor_version] = [parse(Int, sstr[8])]
           tdict[:stan_patch_version] = [parse(Int, sstr[12])]
           close(instream)
-          instream = open("$(model.name)_$(res_type)_$(i).csv")
+          instream = open("$(model.output_base)_$(res_type)_$(i).csv")
         end
         
         # After reopening the file, skip all comment lines

@@ -30,7 +30,7 @@ function cmdline(m, id)
     output file=bernoulli3_samples_1.csv refresh=100`,
   =#
   cmd = ``
-  if isa(m, CmdStanSampleModel)
+  if isa(m, CmdStanOptimizeModel)
     # Handle the model name field for unix and windows
     cmd = `$(m.exec_path)`
 
@@ -65,10 +65,8 @@ function cmdline(m, id)
   else
     
     # The 'recursive' part
-    if isa(m, SamplingAlgorithm)
+    if isa(m, OptimizeAlgorithm)
       cmd = `$cmd algorithm=$(split(lowercase(string(typeof(m))), '.')[end])`
-    elseif isa(m, Engine)
-      cmd = `$cmd engine=$(split(lowercase(string(typeof(m))), '.')[end])`
     else
       cmd = `$cmd $(split(lowercase(string(typeof(m))), '.')[end])`
     end

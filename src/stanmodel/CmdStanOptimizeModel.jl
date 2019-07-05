@@ -14,7 +14,7 @@ Create a CmdStanOptimizeModel.
 ### Optional arguments
 ```julia
 * `n_chains::Vector{Int64}=[4]`        : Optionally updated in stan_sample()
-* `method::AbstractStanMethod`         : See ?Method (default: Sample())
+* `method::Optimize`                   : Fix Stan method in CmdStanOptimizeModels
 * `random::Random`                     : Random seed settings
 * `output::Output`              : File output options
 * `init::Init`                         : Default interval bound for parameters
@@ -34,25 +34,25 @@ Create a CmdStanOptimizeModel.
 
 """
 struct CmdStanOptimizeModel
-name::AbstractString
-model::AbstractString
-n_chains::Vector{Int64}
-method::AbstractStanMethod
-random::Random
-init::Init
-output::Output
-tmpdir::AbstractString
-output_base::AbstractString
-exec_path::AbstractString
-data_file::Vector{String}
-init_file::Vector{String}
-cmds::Vector{Cmd}
-sample_file::Vector{String}
-log_file::Vector{String}
-diagnostic_file::Vector{String}
-summary::Bool
-printsummary::Bool
-sm::StanRun.StanModel
+  name::AbstractString
+  model::AbstractString
+  n_chains::Vector{Int64}
+  method::Optimize
+  random::Random
+  init::Init
+  output::Output
+  tmpdir::AbstractString
+  output_base::AbstractString
+  exec_path::AbstractString
+  data_file::Vector{String}
+  init_file::Vector{String}
+  cmds::Vector{Cmd}
+  sample_file::Vector{String}
+  log_file::Vector{String}
+  diagnostic_file::Vector{String}
+  summary::Bool
+  printsummary::Bool
+  sm::StanRun.StanModel
 end
 
 function CmdStanOptimizeModel(
@@ -88,7 +88,7 @@ function model_show(io::IO, m::CmdStanOptimizeModel, compact::Bool)
   println("    diagnostics_file =        \"$(m.output.diagnostic_file)\"")
   println("    refresh =                 $(m.output.refresh)")
   println("  tmpdir =                  \"$(m.tmpdir)\"")
-  sample_show(io, m.method, compact)
+  optimize_show(io, m.method, compact)
 end
 
 show(io::IO, m::CmdStanOptimizeModel) = model_show(io, m, false)

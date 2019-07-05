@@ -1,6 +1,6 @@
 ######### CmdStan optimize example  ###########
 
-using StanOptimize, Test, Statistics
+using StanOptimize
 
 bernoulli_model = "
 data { 
@@ -16,33 +16,31 @@ model {
 }
 ";
 
-bernoulli_data = Dict("N" => 10, "y" => [0, 1, 0, 1, 0, 0, 0, 0, 0, 1]
+bernoulli_data = Dict("N" => 10, "y" => [0, 1, 0, 1, 0, 0, 0, 0, 0, 1])
 
-tmpdir = joinpath(ProjDir, "tmp")
+stanmodel = CmdStanOptimizeModel("bernoulli",  bernoulli_model;
+  tmpdir = joinpath(@__DIR__, "tmp"));
 
-stanmodel = CmdStanOptimizeModel("bernoulli",  bernoulli_model);
+(sample_path, log_path) = stan_sample(stanmodel, data=bernoulli_data);
 
-rc, optim, cnames = stan(stanmodel, data=bernoullidata);
-
-if rc == 0
-  optim, cnames = read_optimize(model)
+if sample_path !== Nothing
+  optim, cnames = read_optimize(stanmodel)
   println()
   display(optim)
   println()
-  @test optim["theta"][end] ≈ 0.3 atol=0.1
 end
 
 # Same with saved iterations
-stanmodel = CmdStanOptimizeModel(name = "bernoulli", model = bernoulli,
-  method = Optimize(save_iterations = true));
+stanmodel = CmdStanOptimizeModel("bernoulli", bernoulli_model;
+  method = StanOptimize.Optimize(save_iterations = true),
+  tmpdir = joinpath(@__DIR__, "tmp"));
 
-rc, optim, cnames = stan(stanmodel, data=bernoullidata);
+(sample_path, log_path)  = stan_sample(stanmodel, data=bernoulli_data);
 
-if rc == 0
-  optim, cnames = read_optimize(model)
+if sample_path !== Nothing
+  optim, cnames = read_optimize(stanmodel)
   println()
   display(optim)
   println()
-  @test optim["theta"][end] ≈ 0.3 atol=0.1
 end
 
