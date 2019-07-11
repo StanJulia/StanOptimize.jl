@@ -41,7 +41,7 @@ function OptimizeModel(
   model::AbstractString,
   n_chains=[4];
   method = Optimize(),
-  random = StanBase.Random(),
+  seed = StanBase.RandomSeed(),
   init = StanBase.Init(),
   output = StanBase.Output(),
   tmpdir = mktempdir())
@@ -56,7 +56,7 @@ function OptimizeModel(
   
   stan_compile(sm)
   
-  OptimizeModel(name, model, n_chains, random, init, output,
+  OptimizeModel(name, model, n_chains, seed, init, output,
     tmpdir, output_base, exec_path, String[], String[], 
     Cmd[], String[], String[], String[], false, false, sm, method)
 end

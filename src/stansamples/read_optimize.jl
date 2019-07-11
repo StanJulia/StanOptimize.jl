@@ -24,7 +24,7 @@ function read_optimize(model::OptimizeModel)
   ## tdict contains the arrays of values ##
   tdict = Dict()
   
-  for i in 1:get_n_chains(model)
+  for i in 1:StanBase.get_n_chains(model)
       if isfile("$(model.output_base)_$(res_type)_$(i).csv")
         
         # A result type file for chain i is present ##

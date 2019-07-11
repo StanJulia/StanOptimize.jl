@@ -19,7 +19,7 @@ cmdline(m)
 ?CmdStanSampleModel                      : Create a CmdStanSampleModel
 ```
 """
-function cmdline(m::Union{OptimizeModel, Optimize, StanBase.RandomSeed}, id)
+function cmdline(m::Union{OptimizeModel, Optimize, Lbfgs, Bfgs, Newton, StanBase.RandomSeed}, id)
   
   #=
   `/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli

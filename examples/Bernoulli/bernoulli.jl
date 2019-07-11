@@ -32,7 +32,7 @@ end
 
 # Same with saved iterations
 stanmodel = OptimizeModel("bernoulli", bernoulli_model;
-  #method = StanOptimize.Optimize(save_iterations = true),
+  method = StanOptimize.Optimize(save_iterations = true),
   tmpdir = joinpath(@__DIR__, "tmp"));
 
 (sample_path, log_path)  = stan_sample(stanmodel, data=bernoulli_data);
