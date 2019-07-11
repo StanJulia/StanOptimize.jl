@@ -18,17 +18,15 @@ using Random
 using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 
 import StanRun: stan_sample, stan_cmd_and_paths, default_output_base
+import StanBase: cmdline
 
 include("stanmodel/optimize_types.jl")
 include("stanmodel/OptimizeModel.jl")
 include("stanrun/cmdline.jl")
 include("stansamples/read_optimize.jl")
 
-stan_optimize = stan_sample
-
 export
   OptimizeModel,
-  stan_optimize,
   read_optimize
 
 end # module
