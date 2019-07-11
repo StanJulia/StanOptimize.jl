@@ -22,13 +22,15 @@ cmdline(m)
 function cmdline(m, id)
   
   #=
-  `./bernoulli3 sample num_samples=1000 num_warmup=1000 
-    save_warmup=0 thin=1 adapt engaged=1 gamma=0.05 delta=0.8 kappa=0.75 
-    t0=10.0 init_buffer=75 term_buffer=50 window=25 algorithm=hmc engine=nuts 
-    max_depth=10 metric=diag_e stepsize=1.0 stepsize_jitter=1.0 random 
-    seed=-1 init=bernoulli3_1.init.R id=1 data file=bernoulli3_1.data.R 
-    output file=bernoulli3_samples_1.csv refresh=100`,
+  `/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli
+  optimize algorithm=lbfgs init_alpha=0.001 tol_obj=1.0e-8 tol_rel_
+  obj=10000.0 tol_grad=1.0e-8 tol_rel_grad=1.0e7 tol_param=1.0e-8 
+  history_size=5 iter=2000 save_iterations=1 random seed=-1 init=2 
+  id=1 data file=/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli_data_1.R 
+  output file=/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli_chain_1.csv 
+  refresh=100`
   =#
+  
   cmd = ``
   if isa(m, CmdStanOptimizeModel)
     # Handle the model name field for unix and windows
