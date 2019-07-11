@@ -12,12 +12,7 @@ module StanOptimize
 
 using Reexport
 
-@reexport using Unicode, DelimitedFiles, Distributed
-@reexport using StanDump
-@reexport using StanRun
-@reexport using StanSamples
-@reexport using MCMCChains
-@reexport using Parameters
+@reexport using StanBase
 
 using Random
 using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
@@ -25,16 +20,15 @@ using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 import StanRun: stan_sample, stan_cmd_and_paths, default_output_base
 
 include("stanmodel/optimize_types.jl")
-include("stanmodel/CmdStanOptimizeModel.jl")
-include("stanmodel/update_model_file.jl")
-include("stanmodel/number_of_chains.jl")
+include("stanmodel/OptimizeModel.jl")
 include("stanrun/cmdline.jl")
-include("stanrun/stan_sample.jl")
 include("stansamples/read_optimize.jl")
 
+stan_optimize = stan_sample
+
 export
-  CmdStanModels,
-  CmdStanOptimizeModel,
+  OptimizeModel,
+  stan_optimize,
   read_optimize
 
 end # module

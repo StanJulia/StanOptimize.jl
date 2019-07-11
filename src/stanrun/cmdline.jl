@@ -19,7 +19,7 @@ cmdline(m)
 ?CmdStanSampleModel                      : Create a CmdStanSampleModel
 ```
 """
-function cmdline(m, id)
+function cmdline(m::Union{OptimizeModel, Optimize, StanBase.RandomSeed}, id)
   
   #=
   `/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli
@@ -32,7 +32,7 @@ function cmdline(m, id)
   =#
   
   cmd = ``
-  if isa(m, CmdStanOptimizeModel)
+  if isa(m, OptimizeModel)
     # Handle the model name field for unix and windows
     cmd = `$(m.exec_path)`
 
@@ -40,7 +40,7 @@ function cmdline(m, id)
     cmd = `$cmd $(cmdline(getfield(m, :method), id))`
     
     # Common to all models
-    cmd = `$cmd $(cmdline(getfield(m, :random), id))`
+    cmd = `$cmd $(cmdline(getfield(m, :seed), id))`
     
     # Init file required?
     if length(m.init_file) > 0 && isfile(m.init_file[id])
@@ -70,7 +70,11 @@ function cmdline(m, id)
     if isa(m, OptimizeAlgorithm)
       cmd = `$cmd algorithm=$(split(lowercase(string(typeof(m))), '.')[end])`
     else
-      cmd = `$cmd $(split(lowercase(string(typeof(m))), '.')[end])`
+      if typeof(m) == StanBase.RandomSeed
+        cmd = `$cmd random`
+      else
+        cmd = `$cmd $(split(lowercase(string(typeof(m))), '.')[end])`
+      end
     end
     for name in fieldnames(typeof(m))
       if  isa(getfield(m, name), String) || isa(getfield(m, name), Tuple)
@@ -82,11 +86,7 @@ function cmdline(m, id)
           if name == :metric || isa(getfield(m, name), DataType)
             cmd = `$cmd $(name)=$(split(lowercase(string(typeof(getfield(m, name)))), '.')[end])`
           else
-            if name == :algorithm && typeof(getfield(m, name)) == CmdStan.Fixed_param
-              cmd = `$cmd $(name)=fixed_param`
-            else
-              cmd = `$cmd $(name)=$(getfield(m, name))`
-            end
+            cmd = `$cmd $(name)=$(getfield(m, name))`
           end
         end
       else

@@ -15,7 +15,7 @@ read_optimize(m::Stanmodel)
 ```
 
 """
-function read_optimize(model::CmdStanOptimizeModel)
+function read_optimize(model::OptimizeModel)
   ## Collect the results in a Dict
   
   cnames = String[]
