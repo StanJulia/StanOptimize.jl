@@ -33,9 +33,7 @@ function read_optimize(model::OptimizeModel)
         if i == 1
           str = read(instream, String)
           sstr = split(str)
-          tdict[:stan_major_version] = [parse(Int, sstr[4])]
-          tdict[:stan_minor_version] = [parse(Int, sstr[8])]
-          tdict[:stan_patch_version] = [parse(Int, sstr[12])]
+          tdict[:stan_version] = "$(parse(Int, sstr[4])).$(parse(Int, sstr[8])).$(parse(Int, sstr[12]))"
           close(instream)
           instream = open("$(model.output_base)_$(res_type)_$(i).csv")
         end

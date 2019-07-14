@@ -24,9 +24,9 @@ stanmodel = OptimizeModel("bernoulli",  bernoulli_model;
 (sample_path, log_path) = stan_sample(stanmodel, data=bernoulli_data);
 
 if sample_path !== Nothing
-  optim, cnames = read_optimize(stanmodel)
+  optim1, cnames = read_optimize(stanmodel)
   println()
-  display(optim)
+  display(optim1)
   println()
 end
 
@@ -38,9 +38,9 @@ stanmodel = OptimizeModel("bernoulli", bernoulli_model;
 (sample_path, log_path)  = stan_sample(stanmodel, data=bernoulli_data);
 
 if sample_path !== Nothing
-  optim, cnames = read_optimize(stanmodel)
+  optim2, cnames = read_optimize(stanmodel)
   println()
-  display(optim)
+  display(optim2)
   println()
 end
 
