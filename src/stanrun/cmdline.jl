@@ -19,7 +19,7 @@ cmdline(m)
 ?CmdStanSampleModel                      : Create a CmdStanSampleModel
 ```
 """
-function cmdline(m::Union{OptimizeModel, Optimize, Lbfgs, Bfgs, Newton, StanBase.RandomSeed}, id)
+function cmdline(m::Union{OptimizeModel, Optimize, Lbfgs, Bfgs, Newton}, id)
   
   #=
   `/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli
@@ -40,7 +40,7 @@ function cmdline(m::Union{OptimizeModel, Optimize, Lbfgs, Bfgs, Newton, StanBase
     cmd = `$cmd $(cmdline(getfield(m, :method), id))`
     
     # Common to all models
-    cmd = `$cmd $(cmdline(getfield(m, :seed), id))`
+    cmd = `$cmd random seed=$(getfield(m, :seed).seed)`
     
     # Init file required?
     if length(m.init_file) > 0 && isfile(m.init_file[id])
@@ -70,11 +70,7 @@ function cmdline(m::Union{OptimizeModel, Optimize, Lbfgs, Bfgs, Newton, StanBase
     if isa(m, OptimizeAlgorithm)
       cmd = `$cmd algorithm=$(split(lowercase(string(typeof(m))), '.')[end])`
     else
-      if typeof(m) == StanBase.RandomSeed
-        cmd = `$cmd random`
-      else
-        cmd = `$cmd $(split(lowercase(string(typeof(m))), '.')[end])`
-      end
+      cmd = `$cmd $(split(lowercase(string(typeof(m))), '.')[end])`
     end
     for name in fieldnames(typeof(m))
       if  isa(getfield(m, name), String) || isa(getfield(m, name), Tuple)

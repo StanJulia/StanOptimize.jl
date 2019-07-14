@@ -25,8 +25,11 @@ include("stanmodel/OptimizeModel.jl")
 include("stanrun/cmdline.jl")
 include("stansamples/read_optimize.jl")
 
+stan_optimize = stan_sample
+
 export
   OptimizeModel,
+  stan_optimize,
   read_optimize
 
 end # module
