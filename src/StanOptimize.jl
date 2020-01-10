@@ -10,14 +10,10 @@ be used to sample from it.
 """
 module StanOptimize
 
-using Reexport
-
-@reexport using StanBase
-
-using Random
+using StanBase
 using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 
-import StanRun: stan_sample, stan_cmd_and_paths, default_output_base
+import StanBase: stan_sample, get_cmdstan_home
 import StanBase: cmdline
 
 include("stanmodel/optimize_types.jl")
