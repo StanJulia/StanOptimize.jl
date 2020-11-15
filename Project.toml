@@ -1,7 +1,7 @@
 name = "StanOptimize"
 uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
 authors = ["Rob J Goedman <goedman@mac.com>"]
-version = "2.1.2"
+version = "2.1.1"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
