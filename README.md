@@ -1,13 +1,20 @@
 # StanOptimize.jl
 
-![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)<!--
-![Lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-retired-orange.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-archived-red.svg)
-![Lifecycle](https://img.shields.io/badge/lifecycle-dormant-blue.svg) -->
-[![Build Status](https://travis-ci.com/examples/StanOptimize.jl.svg?branch=master)](https://travis-ci.com/StanJulia/StanOptimize.jl)
-[![codecov.io](http://codecov.io/github/StanJulia/StanOptimize.jl/coverage.svg?branch=master)](http://codecov.io/github/StanJulia/StanOptimize.jl?branch=master)
+| **Project Status**          |  **Build Status** |
+|:---------------------------:|:-----------------:|
+|![][project-status-img] | ![][CI-build] |
+
+[docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
+[docs-dev-url]: https://stanjulia.github.io/StanOptimize.jl/latest
+
+[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
+[docs-stable-url]: https://stanjulia.github.io/StanOptimize.jl/stable
+
+[CI-build]: https://github.com/stanjulia/StanOptimize.jl/workflows/CI/badge.svg?branch=master
+
+[issues-url]: https://github.com/stanjulia/StanOptimize.jl/issues
+
+[project-status-img]: https://img.shields.io/badge/lifecycle-wip-orange.svg
 
 ## Important note
 
