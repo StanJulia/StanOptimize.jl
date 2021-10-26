@@ -1,7 +1,14 @@
+inport Base: show
+
+mutable struct OptimizeModel <: CmdStanModels
+  @shared_fields_stanmodels
+  method::Optimize
+end
+
 """
 # OptimizeModel 
 
-Create a OptimizeModel. 
+Create a OptimizeModel and compil Stan Language Model. 
 
 ### Required arguments
 ```julia
@@ -11,59 +18,71 @@ Create a OptimizeModel.
 
 ### Optional arguments
 ```julia
-* `n_chains::Vector{Int64}=[4]`        : Optionally updated in stan_sample()
-* `seed::RandomSeed`                     : Random seed settings
-* `output::Output`              : File output options
-* `init::Init`                         : Default interval bound for parameters
-* `tmpdir::AbstractString`             : Directory where output files are stored
-* `output_base::AbstractString`        : Base name for output files
-* `exec_path::AbstractString`          : Path to cmdstan executable
-* `data_file::vector{AbstractString}`  : Path to per chain data file
-* `init_file::Vector{AbstractString}`  : Path to per chain init file
-* `cmds::Vector{Cmd}`                  : Path to per chain init file
-* `sample_file::Vector{String}         : Path to per chain samples file
-* `log_file::Vector{String}            : Path to per chain log file
-* `diagnostic_file::Vector{String}    : Path to per chain diagnostic file
-* `method::Optimize`                   : Fix Optimize
+* `tmpdir=mktempdir()`          : Directory where output files are stored
 ```
 
 """
-mutable struct OptimizeModel <: CmdStanModels
-  @shared_fields_stanmodels
-  method::Optimize
-end
+function OptimizeModel(name::AbstractString, model::AbstractString,
+    tmpdir = mktempdir())
+    
+    !isdir(tmpdir) && mkdir(tmpdir)
+    
+    update_model_file(joinpath(tmpdir, "$(name).stan"), strip(model))
 
-function OptimizeModel(
-  name::AbstractString,
-  model::AbstractString,
-  n_chains=[4];
-  method = Optimize(),
-  seed = StanBase.RandomSeed(),
-  init = StanBase.Init(),
-  output = StanBase.Output(),
-  tmpdir = mktempdir())
-  
-  !isdir(tmpdir) && mkdir(tmpdir)
-  
-  StanBase.update_model_file(joinpath(tmpdir, "$(name).stan"), strip(model))
+    output_base = joinpath(tmpdir, name)
+    exec_path = StanBase.executable_path(output_base)
+    cmdstan_home = get_cmdstan_home()
 
-  output_base = joinpath(tmpdir, name)
-  exec_path = StanBase.executable_path(output_base)
-  cmdstan_home = get_cmdstan_home()
+    error_output = IOBuffer()
+    is_ok = cd(cmdstan_home) do
+        success(pipeline(`make -f $(cmdstan_home)/makefile -C $(cmdstan_home) $(exec_path)`;
+                         stderr = error_output))
+    end
 
-  error_output = IOBuffer()
-  is_ok = cd(cmdstan_home) do
-      success(pipeline(`make -f $(cmdstan_home)/makefile -C $(cmdstan_home) $(exec_path)`;
-                       stderr = error_output))
-  end
-  if !is_ok
-      throw(StanModelError(model, String(take!(error_output))))
-  end
+    if !is_ok
+        throw(StanModelError(model, String(take!(error_output))))
+    end
 
-  OptimizeModel(name, model, n_chains, seed, init, output,
-    tmpdir, output_base, exec_path, String[], String[], 
-    Cmd[], String[], String[], String[], false, false,
-    cmdstan_home, method)
+    OptimizeModel(name, model,
+      # num_chains, num_threads, num_samples, num_warmups, save_warmups
+      4, 4, 1000, 1000, false,
+      # thin, seed, refresh, init_bound
+      1, -1, 100, 2,
+      # Adapt fields
+      # engaged, gamma, delta, kappa, t0, init_buffer, term_buffer, window
+      true, 0.05, 0.8, 0.75, 10, 75, 50, 25,
+      # algorithm fields
+      :hmc,                          # or :static
+      # engine, max_depth
+      :nuts, 10,
+      # Static engine specific fields
+      2pi,
+      # metric, metric_file, stepsize, stepsize_jitter
+      :diag_e, "", 1.0, 0.0,
+      # Ouput settings
+      #Output(),
+      output_base,
+      # Tmpdir settings
+      tmpdir,
+      # exec_path
+      exec_path,
+      # Data files
+      AbstractString[],
+      # Init files
+      AbstractString[],  
+      # Command lines
+      Cmd[],
+      # Sample .csv files  
+      String[],
+      # Log files
+      String[],
+      # Diagnostic files
+      String[],
+      # Create stansummary result
+      true,
+      # Display stansummary result
+      false,
+        cmdstan_home
 end
 
 function optimize_show(io::IO, m::OptimizeModel, compact::Bool)
