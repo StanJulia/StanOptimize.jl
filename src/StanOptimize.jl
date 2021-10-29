@@ -7,7 +7,8 @@ Helper infrastructure to compile and sample models using `cmdstan`.
 """
 module StanOptimize
 
-using Parameters
+using Parameters, StanDump
+#using DataFrames
 
 using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 

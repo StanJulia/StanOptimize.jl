@@ -88,7 +88,7 @@ $(SIGNATURES)
 
 ### Dispatch arguments
 ```julia
-* `m:: OptimizationsModel`             # CmdStanModel subtype
+* `m:: OptimizeModel`             # CmdStanModel subtype
 ```
 
 ### Keyword arguments
