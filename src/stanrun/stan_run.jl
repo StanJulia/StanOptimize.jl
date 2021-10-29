@@ -80,115 +80,92 @@ diagnostic_file_path(output_base::AbstractString, id::Int) =
 
 """
 
-Execute the method contained in a CmdStanModel.
+Execute the method contained in a OptimizationModel <: CmdStanModel
 
 $(SIGNATURES)
 
 # Extended help
 
-### Required arguments
+### Dispatch arguments
 ```julia
-* `m <: CmdStanModels`             : CmdStanModel subtype, e.g. SampleModel
+* `m:: OptimizationsModel`             # CmdStanModel subtype
 ```
 
 ### Keyword arguments
 ```julia
 * `init`                               : Init dict
 * `data`                               : Data dict
-* `num_chains=4`                       : Update number of chains.
-* `seed=-1`                            : Set seed value (::Int)
 ```
 
-### Returns
+$(SIGNATURES)
+
+See extended help for other keyword arguments ( `??stan_optimize` ).
+
+# Extended help
+
+### Additional configuration keyword arguments
 ```julia
-* `rc`                                 : Return code, 0 is success
+* `num_chains=4`                       # Update number of chains.
+* `num_threads=8`                      # Update number of threads.
+
+* `seed=-1`                            # Set seed value.
+* `init_bound=2`                       # Boundary for initialization
+
+* `algorithm=:lbfgs`                   # Algorithms: :lbfgs, bfgs or :newton.
+* `init_alpha=0.0001`                  # Line search step size first iteration.
+* `tol_obj=9.999e-13`                  # Convergence tolerance
+* `tol_rel_obj=9.999e-13`              # Relative convergence tolerance
+* `tol_grad=9.999e-13`                 # Convergence tolerance on norm of gradient
+* `tol_rel_grad=9.999e-13`             # Relative convergence tolerance
+* `tol_param=1e-8`                     # Convergence tolerance on param changes
+
+* `history_size=`                      # Amount of history to keep for L-BFGS
+
+* `iter-200`                           # Total number of Newton iterations
+* `save_iterations=0`                  # Stream iterations to output
 ```
 """
-function stan_sample(m::T; kwargs...) where {T <: CmdStanModels}
+function stan_run(m::T; kwargs...) where {T <: CmdStanModels}
 
-    # How many chains and threads?
-    if :num_chains in keys(kwargs)
-        m.num_chains = kwargs[:num_chains]
-    end
-    if :num_threads in keys(kwargs)
-        m.num_threads = kwargs[:num_thrads]
-    end
-
-    # Sample fields
-    if :num_samples in keys(kwargs)
-        m.num_samples = kwargs[:num_samples]
-    end
-    if :num_warmups in keys(kwargs)
-        m.num_warmups = kwargs[:num_warmups]
-    end
-    if :save_warmups in keys(kwargs)
-        m.save_warmups = kwargs[:save_warmups]
-    end
-    if :thin in keys(kwargs)
-        m.thin = kwargs[:thin]
-    end
+    # Seed and init_bound
     if :seed in keys(kwargs)
         m.seed = kwargs[:seed]
     end
-
-    # Adapt fields
-    if :engaged in keys(kwargs)
-        m.engaged = kwargs[:engaged]
-    end
-    if :gamma in keys(kwargs)
-        m.gamma = kwargs[:gamma]
-    end
-    if :delta in keys(kwargs)
-        m.delta = kwargs[:delta]
-    end
-    if :kappa in keys(kwargs)
-        m.kappa = kwargs[:kappa]
-    end
-    if :t0 in keys(kwargs)
-        m.t0 = kwargs[:t0]
-    end
-    if :init_buffer in keys(kwargs)
-        m.init_buffer = kwargs[:init_buffer]
-    end
-    if :term_buffer in keys(kwargs)
-        m.term_buffer = kwargs[:term_buffer]
-    end
-    if :window in keys(kwargs)
-        m.window = kwargs[:window]
+    if :init_bound in keys(kwargs)
+        m.init_bound = kwargs[:init_bound]
     end
 
     #Algorithm fields
     if :algorithm in keys(kwargs)
         m.algorithm = kwargs[:algorithm]
     end
-    if :engine in keys(kwargs)
-        m.engine = kwargs[:engine]
+    if :init_alpha in keys(kwargs)
+        m.init_alpha = kwargs[:init_alpha]
     end
-    if :max_depth in keys(kwargs)
-        m.max_depth = kwargs[:max_depth]
+    if :tol_obj in keys(kwargs)
+        m.tol_obj = kwargs[:tol_obj]
     end
-    if :int_time in keys(kwargs)
-        m.int_time = kwargs[:int_time]
-    end
-
-    if :metric in keys(kwargs)
-        m.metric = kwargs[:metric]
-    end
-    if :metric_file in keys(kwargs)
-        m.metric_file = kwargs[:metric_file]
-    end
-    if :stepsize in keys(kwargs)
-        m.stepsize = kwargs[:stepsize]
-    end
-    if :stepsize_jitter in keys(kwargs)
-        m.stepsize_jitter = kwargs[:stepsize_jitter]
+    if :tol_rel_obj in keys(kwargs)
+        m.tol_rel_obj = kwargs[:tol_rel_obj]
     end
 
-    # Diagnostics files requested?
-    diagnostics = false
-    if :diagnostics in keys(kwargs)
-        diagnostics = kwargs[:diagnostics]
-        setup_diagnostics(m, m.num_chains)
+    if :tol_grad in keys(kwargs)
+        m.tol_grad = kwargs[:tol_grad]
+    end
+    if :tol_rel_grad in keys(kwargs)
+        m.tol_rel_grad = kwargs[:tol_rel_grad]
+    end
+    if :tol_param in keys(kwargs)
+        m.tol_param = kwargs[:tol_param]
+    end
+    if :history_size in keys(kwargs)
+        m.history_size = kwargs[:history_size]
+    end
+    if :iter in keys(kwargs)
+        m.iter = kwargs[:iter]
+    end
+    if :save_iterations in keys(kwargs)
+        m.save_iterations = kwargs[:save_iterations]
     end
 
     # Remove existing sample files
@@ -206,7 +183,7 @@ function stan_sample(m::T; kwargs...) where {T <: CmdStanModels}
 
     #println(typeof(m.cmds))
     #println()
-    #println(m.cmds)
+    println(m.cmds)
 
     run(pipeline(par(m.cmds), stdout=m.log_file[1]))
 end

@@ -11,19 +11,21 @@ cmdline(m)
 
 ### Required arguments
 ```julia
-* `m::CmdStanSampleModel`                : CmdStanSampleModel
+* `m::CmdStanModel`                    : CmdStanSampleModel
 ```
 
 ### Related help
 ```julia
-?CmdStanSampleModel                      : Create a CmdStanSampleModel
+?OptimizeModel                         : Create a OptimizeModel
+?stan_optimize                         : Execute an OptimizeModel
 ```
 """
-function cmdline(m::Union{OptimizeModel, Optimize, Lbfgs, Bfgs, Newton}, id)
+function cmdline(m::OptimizeModel, id)
   
   #=
   `/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli
-  optimize algorithm=lbfgs init_alpha=0.001 tol_obj=1.0e-8 tol_rel_
+  optimize 
+  algorithm=lbfgs init_alpha=0.001 tol_obj=1.0e-8 tol_rel_
   obj=10000.0 tol_grad=1.0e-8 tol_rel_grad=1.0e7 tol_param=1.0e-8 
   history_size=5 iter=2000 save_iterations=1 random seed=-1 init=2 
   id=1 data file=/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli_data_1.R 
@@ -37,7 +39,7 @@ function cmdline(m::Union{OptimizeModel, Optimize, Lbfgs, Bfgs, Newton}, id)
     cmd = `$(m.exec_path)`
 
     # Sample() specific portion of the model
-    cmd = `$cmd $(cmdline(getfield(m, :method), id))`
+    cmd = `$cmd optimize`
     
     # Common to all models
     cmd = `$cmd random seed=$(getfield(m, :seed).seed)`
