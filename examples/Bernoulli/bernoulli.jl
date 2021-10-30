@@ -16,13 +16,11 @@ model {
 }
 ";
 
-bernoulli_data = Dict("N" => 10, "y" => [0, 1, 0, 1, 0, 0, 0, 0, 0, 1])
+data = Dict("N" => 10, "y" => [0, 1, 0, 1, 0, 0, 0, 0, 0, 1])
+tmpdir = joinpath(@__DIR__, "tmp")
 
-stanmodel = OptimizeModel("bernoulli",  bernoulli_model;
-  #tmpdir = joinpath(@__DIR__, "tmp"));
-  tmpdir = mktempdir());
-
-rc = stan_optimize(stanmodel, data=bernoulli_data);
+stanmodel = OptimizeModel("bernoulli",  bernoulli_model, tmpdir);
+rc = stan_optimize(stanmodel; data);
 
 if success(rc)
   optim1, cnames = read_optimize(stanmodel)
@@ -32,10 +30,9 @@ if success(rc)
 end
 
 # Same with saved iterations
-stanmodel = OptimizeModel("bernoulli", bernoulli_model;
-  method = StanOptimize.Optimize(save_iterations = true));
+stanmodel = OptimizeModel("bernoulli", bernoulli_model);
 
-rc2  = stan_optimize(stanmodel, data=bernoulli_data);
+rc2  = stan_optimize(stanmodel; data, save_iterations=true);
 
 if success(rc2)
   optim2, cnames = read_optimize(stanmodel)
@@ -43,4 +40,3 @@ if success(rc2)
   display(optim2)
   println()
 end
-

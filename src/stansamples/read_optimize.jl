@@ -8,16 +8,16 @@ Read optimize output file created by cmdstan.
 
 ### Method
 ```julia
-read_optimize(m::Stanmodel)
+read_optimize(m::OptimizeModel)
 ```
 
 ### Required arguments
 ```julia
-* `m::Stanmodel`    : Stanmodel object
+* `m::OptimizeModel`                   # OptimizeModel object
 ```
 
 """
-function read_optimize(model::OptimizeModel)
+function read_optimize(m::OptimizeModel)
   ## Collect the results in a Dict
   
   cnames = String[]
@@ -26,18 +26,18 @@ function read_optimize(model::OptimizeModel)
   ## tdict contains the arrays of values ##
   tdict = Dict()
   
-  for i in 1:StanBase.get_n_chains(model)
-      if isfile("$(model.output_base)_$(res_type)_$(i).csv")
+  for i in 1:m.num_chains
+      if isfile("$(m.output_base)_$(res_type)_$(i).csv")
         
         # A result type file for chain i is present ##
         
-        instream = open("$(model.output_base)_$(res_type)_$(i).csv")
+        instream = open("$(m.output_base)_$(res_type)_$(i).csv")
         if i == 1
           str = read(instream, String)
           sstr = split(str)
           tdict[:stan_version] = "$(parse(Int, sstr[4])).$(parse(Int, sstr[8])).$(parse(Int, sstr[12]))"
           close(instream)
-          instream = open("$(model.output_base)_$(res_type)_$(i).csv")
+          instream = open("$(m.output_base)_$(res_type)_$(i).csv")
         end
         
         # After reopening the file, skip all comment lines
@@ -52,7 +52,7 @@ function read_optimize(model::OptimizeModel)
         cnames = convert.(String, idx)
 
         # Read optimized values
-        for i in 1:model.method.iter
+        for i in 1:m.iter
           line = Unicode.normalize(readline(instream), newline2lf=true)
           flds = Float64[]
           if eof(instream) && length(line) < 2
