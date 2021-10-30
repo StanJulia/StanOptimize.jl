@@ -6,7 +6,8 @@ mutable struct OptimizeModel <: CmdStanModels
     num_chains::Int;                   # Number of chains
     num_threads::Int;                  # Number of threads
     seed::Int;                         # Seed section of cmd to run cmdstan
-    init_bound::Int                    # Bound for initial param values
+    init::Int;                         # Bound for initial param values
+    refresh::Int;                      # Rate to stream to output
 
     # Algorithm fields
     algorithm::Symbol;                 # :bfgs, :lbfgs or :newton (Default :lbfgs)
@@ -87,7 +88,8 @@ function OptimizeModel(name::AbstractString, model::AbstractString,
         4,                             # Number of chains
         8,                             # Number of threads
         -1,                            # seed
-        2,                             # init_bound
+        2,                             # init
+        100,                           # refresh
 
         :lbfgs,                        # algorithm (:lbfgs, :bfgs or :newton)
         0.001,                         # init_alpha
@@ -100,7 +102,7 @@ function OptimizeModel(name::AbstractString, model::AbstractString,
         5,                             # history_size for L-BFGS
         
         2000,                          # Newton iterations
-        false,                             # save_iterations
+        false,                         # save_iterations
 
         output_base,                   # Output settings
         tmpdir,                        # Tmpdir settings
@@ -121,7 +123,8 @@ function Base.show(io::IO, ::MIME"text/plain", m::OptimizeModel)
     println(io, "  num_chains =              ", m.num_chains)
     println(io, "  num_threads =             ", m.num_threads)
     println(io, "  seed =                    ", m.seed)
-    println(io, "  init_bound =              ", m.init_bound)
+    println(io, "  init =                    ", m.init)
+    println(io, "  refresh =                 ", m.refresh)
     
     println(io, "\nAlgorithm section:")
     println(io, "  algorithm =               ", m.algorithm)

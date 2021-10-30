@@ -17,11 +17,11 @@ model {
 ";
 
 data = Dict("N" => 10, "y" => [0, 1, 0, 1, 0, 0, 0, 0, 0, 1])
+tmpdir = joinpath(@__DIR__, "tmp")
 
-stanmodel = OptimizeModel("bernoulli",  bernoulli_model);
+stanmodel = OptimizeModel("bernoulli",  bernoulli_model, tmpdir);
 rc = stan_optimize(stanmodel; data);
 
-#=
 if success(rc)
   optim1, cnames = read_optimize(stanmodel)
   println()
@@ -40,4 +40,3 @@ if success(rc2)
   display(optim2)
   println()
 end
-=#

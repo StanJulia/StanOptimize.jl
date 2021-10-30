@@ -22,79 +22,70 @@ cmdline(m)
 """
 function cmdline(m::OptimizeModel, id)
   
-  #=
-  `/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli
-  optimize 
-  algorithm=lbfgs init_alpha=0.001 tol_obj=1.0e-8 tol_rel_
-  obj=10000.0 tol_grad=1.0e-8 tol_rel_grad=1.0e7 tol_param=1.0e-8 
-  history_size=5 iter=2000 save_iterations=1 random seed=-1 init=2 
-  id=1 data file=/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli_data_1.R 
-  output file=/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli_chain_1.csv 
-  refresh=100`
-  =#
-  
-  cmd = ``
-  if isa(m, OptimizeModel)
-    # Handle the model name field for unix and windows
-    cmd = `$(m.exec_path)`
+    #=
+    `/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli
+    optimize 
+    algorithm=lbfgs init_alpha=0.001 tol_obj=1.0e-8 tol_rel_
+    obj=10000.0 tol_grad=1.0e-8 tol_rel_grad=1.0e7 tol_param=1.0e-8 
+    history_size=5 iter=2000 save_iterations=1 random seed=-1 init=2 
+    id=1 data file=/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli_data_1.R 
+    output file=/Users/rob/.julia/dev/StanOptimize/examples/Bernoulli/tmp/bernoulli_chain_1.csv 
+    refresh=100`
+    =#
 
-    # Sample() specific portion of the model
-    cmd = `$cmd optimize`
-    
-    # Common to all models
-    cmd = `$cmd random seed=$(getfield(m, :seed).seed)`
-    
-    # Init file required?
-    if length(m.init_file) > 0 && isfile(m.init_file[id])
-      cmd = `$cmd init=$(m.init_file[id])`
-    else
-      cmd = `$cmd init=$(m.init.bound)`
-    end
-    
-    # Data file required?
-    if length(m.data_file) > 0 && isfile(m.data_file[id])
-      cmd = `$cmd id=$(id) data file=$(m.data_file[id])`
-    end
-    
-    # Output options
-    cmd = `$cmd output`
-    if length(m.sample_file) > 0
-      cmd = `$cmd file=$(m.sample_file[id])`
-    end
-    if length(m.diagnostic_file) > 0
-      cmd = `$cmd diagnostic_file=$(m.diagnostic_file[id])`
-    end
-    
-    cmd = `$cmd refresh=$(string(getfield(m, :output).refresh))`
-    
-  else
-    
-    # The 'recursive' part
-    if isa(m, OptimizeAlgorithm)
-      cmd = `$cmd algorithm=$(split(lowercase(string(typeof(m))), '.')[end])`
-    else
-      cmd = `$cmd $(split(lowercase(string(typeof(m))), '.')[end])`
-    end
-    for name in fieldnames(typeof(m))
-      if  isa(getfield(m, name), String) || isa(getfield(m, name), Tuple)
-        cmd = `$cmd $(name)=$(getfield(m, name))`
-      elseif length(fieldnames(typeof(getfield(m, name)))) == 0
-        if isa(getfield(m, name), Bool)
-          cmd = `$cmd $(name)=$(getfield(m, name) ? 1 : 0)`
-        else
-          if name == :metric || isa(getfield(m, name), DataType)
-            cmd = `$cmd $(name)=$(split(lowercase(string(typeof(getfield(m, name)))), '.')[end])`
-          else
-            cmd = `$cmd $(name)=$(getfield(m, name))`
-          end
+    cmd = ``
+    if isa(m, OptimizeModel)
+        # Handle the model name field for unix and windows
+        cmd = `$(m.exec_path)`
+
+        # Sample() specific portion of the model
+        cmd = `$cmd optimize`
+
+        cmd = `$cmd algorithm=$(m.algorithm)`
+        if m.algorithm in [:lbfgs, :bfgs]
+            cmd = `$cmd init_alpha=$(m.init_alpha)`
+            cmd = `$cmd tol_obj=$(m.tol_obj)`
+            cmd = `$cmd tol_rel_obj=$(m.tol_rel_obj)`
+            cmd = `$cmd tol_grad=$(m.tol_grad)`
+            cmd = `$cmd tol_rel_grad=$(m.tol_rel_grad)`
+            cmd = `$cmd tol_param=$(m.tol_param)`
+            if m.algorithm == :lbfgs
+                cmd = `$cmd history_size=$(m.history_size)`
+            end
+        elseif m.algorithn == :newtom
+            cmd = `$cmd iter=$(m.iter)`
+            if m.save_history
+                cmd = `$cmd save_iterations=1`
+            else
+                cmd = `$cmd save_iterations=0`
+            end
         end
-      else
-        cmd = `$cmd $(cmdline(getfield(m, name), id))`
-      end
-    end
-  end
-  
-  cmd
-  
-end
 
+        # Common to all models
+        cmd = `$cmd random seed=$(m.seed)`
+
+        # Init file required?
+        if length(m.init_file) > 0 && isfile(m.init_file[id])
+          cmd = `$cmd init=$(m.init_file[id])`
+        else
+          cmd = `$cmd init=$(m.init)`
+        end
+
+        # Data file required?
+        if length(m.data_file) > 0 && isfile(m.data_file[id])
+          cmd = `$cmd id=$(id) data file=$(m.data_file[id])`
+        end
+
+        # Output options
+        cmd = `$cmd output`
+        if length(m.sample_file) > 0
+          cmd = `$cmd file=$(m.sample_file[id])`
+        end
+        if length(m.diagnostic_file) > 0
+          cmd = `$cmd diagnostic_file=$(m.diagnostic_file[id])`
+        end
+
+        cmd = `$cmd refresh=$(m.refresh)`
+    end
+    cmd
+end
