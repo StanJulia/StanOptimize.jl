@@ -48,7 +48,7 @@ pkg> add StanOptimize
 You need a working [cmdstan](https://mc-stan.org/users/interfaces/cmdstan.html) installation, the path of which you should specify in `JULIA_CMDSTAN_HOME`, eg in your `~/.julia/config/startup.jl` have a line like
 ```julia
 # CmdStan setup
-ENV["JULIA_CMDSTAN_HOME"] = expanduser("~/src/cmdstan-2.19.1/") # replace with your path
+ENV["JULIA_CMDSTAN_HOME"] = expanduser("~/src/cmdstan-2.28.1/") # replace with your path
 ```
 
 This package is derived from Tamas Papp's [StanRun.jl]() package.
