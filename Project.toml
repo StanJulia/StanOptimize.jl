@@ -1,6 +1,7 @@
 name = "StanOptimize"
 uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
 authors = ["Rob J Goedman <goedman@mac.com>"]
+version = "3.0.0"
 
 
 [deps]
