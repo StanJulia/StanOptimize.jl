@@ -80,9 +80,9 @@ diagnostic_file_path(output_base::AbstractString, id::Int) =
 
 """
 
-Execute the method contained in a OptimizationModel <: CmdStanModel
+`stan_optimize(...)`
 
-$(SIGNATURES)
+Optimize a StanJulia OptimizationModel <: CmdStanModel
 
 # Extended help
 
@@ -96,8 +96,12 @@ $(SIGNATURES)
 * `init`                               : Init dict
 * `data`                               : Data dict
 ```
-
 $(SIGNATURES)
+
+### Returns
+```julia
+* `rc`                                 # Return code, 0 is success.
+```
 
 See extended help for other keyword arguments ( `??stan_optimize` ).
 
@@ -109,7 +113,8 @@ See extended help for other keyword arguments ( `??stan_optimize` ).
 * `num_threads=8`                      # Update number of threads.
 
 * `seed=-1`                            # Set seed value.
-* `init_bound=2`                       # Boundary for initialization
+* `init=2`                             # Boundary for initialization
+* `refresh=200`                        # Stream to output
 
 * `algorithm=:lbfgs`                   # Algorithms: :lbfgs, bfgs or :newton.
 * `init_alpha=0.0001`                  # Line search step size first iteration.
@@ -121,7 +126,7 @@ See extended help for other keyword arguments ( `??stan_optimize` ).
 
 * `history_size=`                      # Amount of history to keep for L-BFGS
 
-* `iter-200`                           # Total number of Newton iterations
+* `iter=200`                           # Total number of Newton iterations
 * `save_iterations=0`                  # Stream iterations to output
 ```
 """
@@ -131,8 +136,8 @@ function stan_run(m::T; kwargs...) where {T <: CmdStanModels}
     if :seed in keys(kwargs)
         m.seed = kwargs[:seed]
     end
-    if :init_bound in keys(kwargs)
-        m.init_bound = kwargs[:init_bound]
+    if :init in keys(kwargs)
+        m.init = kwargs[:init]
     end
 
     #Algorithm fields
@@ -183,7 +188,7 @@ function stan_run(m::T; kwargs...) where {T <: CmdStanModels}
 
     #println(typeof(m.cmds))
     #println()
-    println(m.cmds)
+    #println(m.cmds)
 
     run(pipeline(par(m.cmds), stdout=m.log_file[1]))
 end
