@@ -6,7 +6,7 @@ mutable struct OptimizeModel <: CmdStanModels
     num_chains::Int;                   # Number of chains
     num_threads::Int;                  # Number of threads
     seed::Int;                         # Seed section of cmd to run cmdstan
-    init::Int;                         # Bound for initial param values
+    init_bound::Int;                   # Bound for initial param values
     refresh::Int;                      # Rate to stream to output
 
     # Algorithm fields
@@ -88,7 +88,7 @@ function OptimizeModel(name::AbstractString, model::AbstractString,
         4,                             # Number of chains
         8,                             # Number of threads
         -1,                            # seed
-        2,                             # init
+        2,                             # init_bound
         100,                           # refresh
 
         :lbfgs,                        # algorithm (:lbfgs, :bfgs or :newton)
@@ -123,7 +123,7 @@ function Base.show(io::IO, ::MIME"text/plain", m::OptimizeModel)
     println(io, "  num_chains =              ", m.num_chains)
     println(io, "  num_threads =             ", m.num_threads)
     println(io, "  seed =                    ", m.seed)
-    println(io, "  init =                    ", m.init)
+    println(io, "  init_bound =              ", m.init_bound)
     println(io, "  refresh =                 ", m.refresh)
     
     println(io, "\nAlgorithm section:")

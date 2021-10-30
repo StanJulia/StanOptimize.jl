@@ -113,7 +113,7 @@ See extended help for other keyword arguments ( `??stan_optimize` ).
 * `num_threads=8`                      # Update number of threads.
 
 * `seed=-1`                            # Set seed value.
-* `init=2`                             # Boundary for initialization
+* `init_bound=2`                       # Boundary for initialization
 * `refresh=200`                        # Stream to output
 
 * `algorithm=:lbfgs`                   # Algorithms: :lbfgs, bfgs or :newton.
@@ -136,8 +136,11 @@ function stan_run(m::T; kwargs...) where {T <: CmdStanModels}
     if :seed in keys(kwargs)
         m.seed = kwargs[:seed]
     end
-    if :init in keys(kwargs)
-        m.init = kwargs[:init]
+    if :init_bound in keys(kwargs)
+        m.init_bound = kwargs[:init_bound]
+    end
+    if :refresh in keys(kwargs)
+        m.refresh = kwargs[:refresh]
     end
 
     #Algorithm fields

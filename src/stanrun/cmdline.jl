@@ -68,7 +68,7 @@ function cmdline(m::OptimizeModel, id)
         if length(m.init_file) > 0 && isfile(m.init_file[id])
           cmd = `$cmd init=$(m.init_file[id])`
         else
-          cmd = `$cmd init=$(m.init)`
+          cmd = `$cmd init=$(m.init_bound)`
         end
 
         # Data file required?
