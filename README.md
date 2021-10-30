@@ -18,7 +18,24 @@
 
 ## Important note
 
-### Refactoring CmdStan.jl v6. Maybe this is an ok approach.
+StanOptimize.jl v3 is a breaking change.
+
+While in StanOptimize.jl v2 one could select Bfgs as optimization algorithm:
+```Julia
+ om = OptimizeModel("bernoulli",  bernoulli_model;
+  method=StanOptimize.Optimize(;method=StanOptimize.Bfgs()),
+  #tmpdir = joinpath(@__DIR__, "tmp"));
+  tmpdir = mktempdir());
+rc = stan_optimize(om; data, init)
+```
+
+In StanOptimize.jl v3:
+```Julia
+om = OptimizeModel("bernoulli",  bernoulli_model)
+rc = stan_optimize(om; data, init, algorithm=:bfgs)
+```
+
+See `??OptimizeModel` and `??stan_optimize`.
 
 ## Installation
 
