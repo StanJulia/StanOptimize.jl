@@ -132,49 +132,7 @@ See extended help for other keyword arguments ( `??stan_optimize` ).
 """
 function stan_run(m::T; kwargs...) where {T <: CmdStanModels}
 
-    # Seed and init_bound
-    if :seed in keys(kwargs)
-        m.seed = kwargs[:seed]
-    end
-    if :init_bound in keys(kwargs)
-        m.init_bound = kwargs[:init_bound]
-    end
-    if :refresh in keys(kwargs)
-        m.refresh = kwargs[:refresh]
-    end
-
-    #Algorithm fields
-    if :algorithm in keys(kwargs)
-        m.algorithm = kwargs[:algorithm]
-    end
-    if :init_alpha in keys(kwargs)
-        m.init_alpha = kwargs[:init_alpha]
-    end
-    if :tol_obj in keys(kwargs)
-        m.tol_obj = kwargs[:tol_obj]
-    end
-    if :tol_rel_obj in keys(kwargs)
-        m.tol_rel_obj = kwargs[:tol_rel_obj]
-    end
-
-    if :tol_grad in keys(kwargs)
-        m.tol_grad = kwargs[:tol_grad]
-    end
-    if :tol_rel_grad in keys(kwargs)
-        m.tol_rel_grad = kwargs[:tol_rel_grad]
-    end
-    if :tol_param in keys(kwargs)
-        m.tol_param = kwargs[:tol_param]
-    end
-    if :history_size in keys(kwargs)
-        m.history_size = kwargs[:history_size]
-    end
-    if :iter in keys(kwargs)
-        m.iter = kwargs[:iter]
-    end
-    if :save_iterations in keys(kwargs)
-        m.save_iterations = kwargs[:save_iterations]
-    end
+    handle_keywords!(m, kwargs)
 
     # Remove existing sample files
     for id in 1:m.num_chains

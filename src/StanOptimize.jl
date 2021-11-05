@@ -12,9 +12,10 @@ using Parameters, StanDump
 
 using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 
-include("common/common_definitions.jl")
-include("common/par.jl")
-include("common/update_model_file.jl")
+using StanBase
+
+import StanBase: update_model_file, par, handle_keywords!
+import StanBase: executable_path, ensure_executable, stan_compile
 
 include("stanmodel/OptimizeModel.jl")
 
