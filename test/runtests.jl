@@ -1,6 +1,6 @@
 using StanOptimize, Test
 
-if haskey(ENV, "JULIA_CMDSTAN_HOME")
+if haskey(ENV, "JULIA_CMDSTAN_HOME") || haskey(ENV, "CMDSTAN")
 
     @testset "Bernoulli optimize" begin
       include(joinpath(@__DIR__, "../examples/Bernoulli/bernoulli.jl"))
@@ -9,5 +9,5 @@ if haskey(ENV, "JULIA_CMDSTAN_HOME")
     end
 
 else
-  println("\nJULIA_CMDSTAN_HOME not set. Skipping tests")
+  println("\nJULIA_CMDSTAN_HOME and CMDSTAN not set. Skipping tests")
 end
