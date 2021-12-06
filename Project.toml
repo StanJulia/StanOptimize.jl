@@ -1,7 +1,7 @@
 name = "StanOptimize"
 uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
 authors = ["Rob J Goedman <goedman@mac.com>"]
-version = "3.1.1"
+version = "3.2.0"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -24,7 +24,7 @@ DataFrames = "1.0"
 DocStringExtensions = "0.8"
 Documenter = "0.27"
 Parameters = "0.12"
-StanBase = "3.1"
+StanBase = "3.2"
 StanDump = "0.2"
 julia = "1"
 
