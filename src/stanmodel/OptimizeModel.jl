@@ -3,8 +3,11 @@ import Base: show
 mutable struct OptimizeModel <: CmdStanModels
     name::AbstractString;              # Name of the Stan program
     model::AbstractString;             # Stan language model program
-    num_chains::Int;                   # Number of chains
-    num_threads::Int;                  # Number of threads
+    num_threads::Int64;                # Number of C++ threads
+    num_cpp_chains::Int64;             # Number of C++ chains in each exec process
+
+    # Sample fields
+    num_chains::Int64;                 # Number of (Julia level) chains
     seed::Int;                         # Seed section of cmd to run cmdstan
     init_bound::Int;                   # Bound for initial param values
     refresh::Int;                      # Rate to stream to output
@@ -85,8 +88,10 @@ function OptimizeModel(name::AbstractString, model::AbstractString,
     end
 
     OptimizeModel(name, model,
-        4,                             # Number of chains
-        8,                             # Number of threads
+        # num_threads, num_cpp_chains
+        1, 1,
+        # num_chains 
+        4,
         -1,                            # seed
         2,                             # init_bound
         100,                           # refresh
@@ -118,10 +123,13 @@ function OptimizeModel(name::AbstractString, model::AbstractString,
 end
 
 function Base.show(io::IO, ::MIME"text/plain", m::OptimizeModel)
+    println("\nC++ threads and chains per forked process:")
+    println(io, "  num_threads =             $(m.num_threads)")
+    println(io, "  num_cpp_chains =          $(m.num_cpp_chains)")
+
     println(io, "\nSample section:")
     println(io, "  name =                    ", m.name)
     println(io, "  num_chains =              ", m.num_chains)
-    println(io, "  num_threads =             ", m.num_threads)
     println(io, "  seed =                    ", m.seed)
     println(io, "  init_bound =              ", m.init_bound)
     println(io, "  refresh =                 ", m.refresh)

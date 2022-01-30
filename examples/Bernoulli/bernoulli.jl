@@ -21,7 +21,7 @@ init = (theta = .5,)
 tmpdir = joinpath(@__DIR__, "tmp")
 
 stanmodel = OptimizeModel("bernoulli",  bernoulli_model, tmpdir);
-rc = stan_optimize(stanmodel; data, init);
+rc = stan_optimize(stanmodel; num_chains=4, data, init);
 
 if success(rc)
   optim1, cnames = read_optimize(stanmodel)
