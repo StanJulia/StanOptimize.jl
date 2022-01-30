@@ -17,10 +17,11 @@ model {
 ";
 
 data = Dict("N" => 10, "y" => [0, 1, 0, 1, 0, 0, 0, 0, 0, 1])
+init = (theta = .5,)
 tmpdir = joinpath(@__DIR__, "tmp")
 
 stanmodel = OptimizeModel("bernoulli",  bernoulli_model, tmpdir);
-rc = stan_optimize(stanmodel; data);
+rc = stan_optimize(stanmodel; data, init);
 
 if success(rc)
   optim1, cnames = read_optimize(stanmodel)
