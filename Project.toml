@@ -1,7 +1,7 @@
 name = "StanOptimize"
 uuid = "fbd8da12-e93d-5a64-9231-612a0707ab99"
 authors = ["Rob J Goedman <goedman@mac.com>"]
-version = "4.1.0"
+version = "4.1.1"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -22,7 +22,7 @@ Unicode = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 [compat]
 CSV = "0.10"
 DataFrames = "1.3"
-DocStringExtensions = "0.8"
+DocStringExtensions = "0.8, 0.9"
 Documenter = "0.27"
 Parameters = "0.12"
 Reexport = "1.2"
