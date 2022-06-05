@@ -16,8 +16,10 @@ model {
 }
 ";
 
-data = Dict("N" => 10, "y" => [0, 1, 0, 1, 0, 0, 0, 0, 0, 1])
-init = (theta = .5,)
+#data = Dict("N" => 10, "y" => [0, 1, 0, 1, 0, 0, 0, 0, 0, 1])
+data = (N = 10, y = [0, 1, 0, 1, 0, 0, 0, 0, 0, 1])
+init = (theta = 0.5,)
+#init = Dict("theta" => 0.5)
 tmpdir = joinpath(@__DIR__, "tmp")
 
 stanmodel = OptimizeModel("bernoulli",  bernoulli_model, tmpdir);

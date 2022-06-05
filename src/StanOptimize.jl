@@ -9,7 +9,7 @@ module StanOptimize
 
 using Reexport
 
-using Parameters, StanDump
+using Parameters, NamedTupleTools, StanDump
 using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 
 @reexport using StanBase
