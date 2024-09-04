@@ -52,7 +52,7 @@ function cmdline(m::OptimizeModel, id)
             if m.algorithm == :lbfgs
                 cmd = `$cmd history_size=$(m.history_size)`
             end
-        elseif m.algorithn == :newtom
+        elseif m.algorithm == :newton
             cmd = `$cmd iter=$(m.iter)`
             if m.save_history
                 cmd = `$cmd save_iterations=1`
