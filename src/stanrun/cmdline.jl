@@ -54,7 +54,7 @@ function cmdline(m::OptimizeModel, id)
             end
         elseif m.algorithm == :newton
             cmd = `$cmd iter=$(m.iter)`
-            if m.save_history
+            if m.save_iterations
                 cmd = `$cmd save_iterations=1`
             else
                 cmd = `$cmd save_iterations=0`
